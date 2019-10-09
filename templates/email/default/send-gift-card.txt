@@ -1,0 +1,16 @@
+{intl l="Bonjour " d="theliagiftcard.email.default"}{if $beneficiary}{$beneficiary}{/if},
+
+{if $sponsor}
+{intl l="Nous avons les plaisir de vous transmettre votre code pour benificier de votre carte cadeau" d="theliagiftcard.email.default"}
+{else}
+    {intl l="Vous avez reçu une carte cadeau de la part de " d="theliagiftcard.email.default"}
+    {$sponsor}
+    {if $message}
+        {intl l="Pour accompagner cette carte cadeau, on vous a laissé un message : " d="theliagiftcard.email.default"}
+        "{$message}"
+    {/if}
+{/if}
+{intl l="Rendez-vous dons votre espace client et entrez le code suivant : " d="theliagiftcard.email.default"}
+{$CODE}
+{intl l="N'hesitez pas à nous contacter pour de plus amples informations" d="theliagiftcard.email.default"}
+{intl l="Salutations." d="theliagiftcard.email.default"}

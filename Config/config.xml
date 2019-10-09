@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<config xmlns="http://thelia.net/schema/dic/config"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://thelia.net/schema/dic/config http://thelia.net/schema/dic/config/thelia-1.0.xsd">
+
+    <loops>
+        <loop name="used.amount.card.gift" class="TheliaGiftCard\Loop\GiftCardOrderUseLoop" />
+        <loop name="list.card.customer.gift" class="TheliaGiftCard\Loop\GiftCardCustomerList" />
+        <loop name="sponsor.list.card.gift" class="TheliaGiftCard\Loop\GiftCArdListSponsor" />
+        <loop name="cart.list.card.gift" class="TheliaGiftCard\Loop\GiftCardCartUseLoop" />
+        <loop name="list.card.gift" class="TheliaGiftCard\Loop\GiftCardList" />
+    </loops>
+
+    <forms>
+        <form name="spend.amount.card.gift" class="TheliaGiftCard\Form\AddAmountCGForm" />
+        <form name="delete.amount.card.gift" class="TheliaGiftCard\Form\DelAmountCGForm" />
+        <form name="add.code.card.gift" class="TheliaGiftCard\Form\AddCardGiftCustomerForm" />
+        <form name="add.code.card.gift" class="TheliaGiftCard\Form\AddCardGiftCustomerForm" />
+        <form name="send.code.card.gift" class="TheliaGiftCard\Form\SendCodeCGForm" />
+        <form name="config.card.gift" class="TheliaGiftCard\Form\GiftCardConfigForm" />
+        <form name="info.base.card.gift" class="TheliaGiftCard\Form\InfoCGBaseForm" />
+        <form name="info.card.gift" class="TheliaGiftCard\Form\InfoCGForm" />
+        <form name="info.add.card.gift" class="TheliaGiftCard\Form\InfoAddCGForm" />
+    </forms>
+
+    <services>
+        <service id="giftcard.service" class="TheliaGiftCard\Service\GiftCardService">
+        </service>
+        <service id="giftcard.order.listener" class="TheliaGiftCard\EventListener\OrderPayListener">
+            <tag name="kernel.event_subscriber"/>
+            <argument type="service" id="service_container" />
+            <argument type="service" id="request" />
+        </service>
+        <service id="giftcard.order.use.listener" class="TheliaGiftCard\EventListener\OrderPayListeneUseAmountCard">
+            <tag name="kernel.event_subscriber"/>
+            <argument type="service" id="service_container" />
+            <argument type="service" id="request" />
+        </service>
+        <service id="giftcard.amount.spend.service" class="TheliaGiftCard\Service\GiftCardAmountSpendService">
+            <argument type="service" id="thelia.taxEngine"/>
+            <argument type="service" id="giftcard.service"/>
+        </service>
+        <service id="giftcard.smarty.plugin" class="TheliaGiftCard\Smarty\Plugins\GiftCardSmartyPlugin" scope="request">
+            <tag name="thelia.parser.register_plugin"/>
+            <argument type="service" id="request" />
+        </service>
+    </services>
+
+    <hooks>
+        <hook id="theliagiftcard.hook" class="TheliaGiftCard\Hook\HookManager">
+            <tag name="hook.event_listener" event="order-edit.after-order-product-list" type="back" method="cardGiftAccountUsageInOrder" />
+            <tag name="hook.event_listener" event="main.top-menu-tools" type="back" method="onMainTopMenuTools"/>
+            <argument type="service" id="thelia.securityContext"/>
+        </hook>
+        <hook id="theliagiftcard.front.account.hook" class="TheliaGiftCard\Hook\HookFrontManager">
+            <tag name="hook.event_listener" event="account.bottom" type="front" method="onAccountBottom" />
+            <tag name="hook.event_listener" event="product.bottom" type="front" method="onProductAdditional" />
+            <tag name="hook.event_listener" event="order-invoice.giftcard-form" type="front" method="onOrderInvoiceBottom" />
+            <tag name="hook.event_listener" event="order-invoice.cart-giftcard-form" type="front" method="onCartInvoiceBottom" />
+        </hook>
+        <hook id="giftcard.hook.config.back" >
+            <tag name="hook.event_listener" event="module.configuration" type="back" templates="render:gift-card-config.html" />
+        </hook>
+    </hooks>
+</config>

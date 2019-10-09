@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<routes xmlns="http://symfony.com/schema/routing"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://symfony.com/schema/routing http://symfony.com/schema/routing/routing-1.0.xsd">
+
+    <route id="add.code.card.gift.route" path="/card-gift/add-code" methods="post">
+        <default key="_controller">TheliaGiftCard\Controller\GiftCardCartController::activateGiftCardAction</default>
+    </route>
+    <route id="spend.amount.card.gift.route" path="/card-gift/spend">
+        <default key="_controller">TheliaGiftCard\Controller\GiftCardCartController::spendAmountAction</default>
+    </route>
+    <route id="delete.amount.card.gift.route" path="/card-gift/delete">
+        <default key="_controller">TheliaGiftCard\Controller\GiftCardCartController::deleteAmountAction</default>
+    </route>
+    <route id="send.code.card.gift.route" path="/card-gift/send-code">
+        <default key="_controller">TheliaGiftCard\Controller\GiftCardCartController::sendEmailGiftCardAction</default>
+    </route>
+    <route id="save.info.gift.route" path="/card-gift/save-info">
+        <default key="_controller">TheliaGiftCard\Controller\GiftCardCartController::saveInfoAction</default>
+    </route>
+
+    <route id="activate.pdf.card.gift.route" path="/admin/module/theliagiftcard/activate/{codeGC}">
+        <default key="_controller">TheliaGiftCard\Controller\GiftCardConfigController::activateGiftCardAction</default>
+    </route>
+    <route id="config.card.gift.route" path="/admin/module/theliagiftcard/config/edit/giftcard">
+        <default key="_controller">TheliaGiftCard\Controller\GiftCardConfigController::editConfigAction</default>
+    </route>
+    <route id="config.pdf.card.gift.route" path="/admin/module/theliagiftcard/config/send/pdf/giftcard">
+        <default key="_controller">TheliaGiftCard\Controller\GiftCardConfigController::generatePdfAction</default>
+    </route>
+    <route id="generate.card.gift.route" path="/admin/module/theliagiftcard/generate-gift-card">
+        <default key="_controller">TheliaGiftCard\Controller\GiftCardConfigController::generateGiftCardAction</default>
+    </route>
+</routes>

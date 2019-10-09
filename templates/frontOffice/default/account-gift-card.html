@@ -1,0 +1,151 @@
+<div class="panel panel-default account-gift-card">
+    <div class="panel-heading">
+        <h4 class="panel-title">
+            <a class="accordion-toggle" data-toggle="collapse" data-parent="#account" href="#account-gift-card">
+                {intl l="Gift Card" d="theliagiftcard.fo.default"}
+            </a>
+        </h4>
+    </div>
+    <div id="account-gift-card">
+        <div class="panel-body table-responsive">
+
+            {form name="add.code.card.gift"}
+                <form action="{url path='/card-gift/add-code'}" method="post">
+
+                    {form_field field='error_url'}
+                        <input type="hidden" name="{$name}" value="{url path="/account"}" />
+                    {/form_field}
+
+                    {form_field field='success_url'}
+                        <input type="hidden" name="{$name}" value="{url path="/account"}" />
+                    {/form_field}
+
+                    {form_field field='error_url'}
+                        <input type="hidden" name="{$name}" value="{url path="/account"}" />
+                    {/form_field}
+
+                    {form_hidden_fields form=$form}
+
+                    {if $form_error}
+                        <div class="alert alert-danger">
+                            {$form_error_message}
+                        </div>
+                    {/if}
+
+                    {form_field form=$form field="code_gift_card"}
+                        <label class="control-label danger" for="{$label_attr.for}">{intl l=$label d="theliagiftcard.fo.default"}</label>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="input-group{if $error} has-error{/if}">
+                                    <input id="{$label_attr.for}" class="form-control" type="text" name="{$name}" value="{$value}">
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-primary" type="submit"><span class="glyphicon glyphicon-check"></span> {intl l="Add Gift Card" d="theliagiftcard.fo.default"}</button>
+                                </span>
+                                </div>
+                            </div>
+                        </div>
+                    {/form_field}
+
+
+
+
+                </form>
+            {/form}
+
+            {ifloop rel="customer.card.gift"}
+                <div class="mt-5">
+                    <div class="h4 text-uppercase">{intl l="Yours Gift Cards" d="theliagiftcard.fo.default"}</div>
+                </div>
+                <table class="table table-orders table-bordered table-hover mt-4" summary="{intl l="List of Gift Card" d="theliagiftcard.fo.default"}">
+                    <thead>
+                    <tr>
+                        <th>{intl l="Code" d="theliagiftcard.fo.default"}</th>
+                        <th>{intl l="From" d="theliagiftcard.fo.default"}</th>
+                        <th>{intl l="Activation Date" d="theliagiftcard.fo.default"}</th>
+                        <th>{intl l="Amount" d="theliagiftcard.fo.default"}</th>
+                        <th>{intl l="Amount spend" d="theliagiftcard.fo.default"}</th>
+                        <th>{intl l="Status" d="theliagiftcard.fo.default"}</th>
+
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {loop type="list.card.customer.gift" name="customer.card.gift" customer_id=current}
+                        <tr>
+                            <td>{$CODE}</td>
+                            <td>{$SPONSOR_NAME}</td>
+                            <td>{$DATE}</td>
+                            <td>{$INIT_AMOUNT}</td>
+                            <td>{$USED_AMOUNT}</td>
+                            <td>
+                                {if $INIT_AMOUNT> $USED_AMOUNT}
+                                    {intl l="Activate" d="theliagiftcard.fo.default"}
+                                {else}
+                                    {intl l="Expired" d="theliagiftcard.fo.default"}
+                                {/if}
+                            </td>
+                        </tr>
+                    {/loop}
+                    </tbody>
+                </table>
+            {/ifloop}
+            {elseloop rel="customer.card.gift"}
+                <hr>
+                <div class="alert alert-warning">
+                    <strong>{intl l="Warning" d="theliagiftcard.fo.default"} !</strong> {intl l="You don't have Gift Card yet." d="theliagiftcard.fo.default"}
+                </div>
+            {/elseloop}
+
+
+            {if {getGitCardMode}}
+                {ifloop rel="sponsor.card.gift"}
+                    <table class="table table-orders table-bordered table-hover" summary="{intl l="List of Gift Card" d="theliagiftcard.fo.default"}">
+                        <thead>
+                        <tr>{intl l="Yours Gift Cards bought" d="theliagiftcard.fo.default"}</tr>
+                        <tr>
+                            <th>{intl l="Code" d="theliagiftcard.fo.default"}</th>
+                            <th>{intl l="Amount" d="theliagiftcard.fo.default"}</th>
+                            <th>{intl l="Beneficiary" d="theliagiftcard.fo.default"}</th>
+                            <th>{intl l="Status" d="theliagiftcard.fo.default"}</th>
+                            <th>{intl l="Action" d="theliagiftcard.fo.default"}</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {loop type="sponsor.list.card.gift" name="sponsor.card.gift" customer_id=current}
+                        {form name="send.code.card.gift"}
+                            <form action="{url path='/card-gift/send-code'}" method="post">
+                                {form_hidden_fields form=$form}
+                                <tr>
+                                    <td>{$CODE}</td>
+                                    <td>{$AMOUNT}</td>
+                                    <td>
+                                        {if $USER_NAME}
+                                            {$USER_NAME}
+                                        {else}
+                                            {form_field field='email'}
+                                                <input id="email-send-{$ID}" type="text" name="{$name}" value="{$value}">
+                                            {/form_field}
+
+                                            {form_field field='code-to-send'}
+                                                <input type="hidden" name="{$name}" value="{$CODE}">
+                                            {/form_field}
+                                        {/if}
+                                    </td>
+                                    <th>{if $USER_NAME}{intl l="Active" d="theliagiftcard.fo.default"}{else}{intl l="Pending" d="theliagiftcard.fo.default"}{/if}</th>
+                                    <td>{if !$USER_NAME}<button class="btn btn-primary" type="submit">{intl l="Send Card Gift" d="theliagiftcard.fo.default"}</button>{/if}</td>
+                                </tr>
+                            </form>
+                        {/form}
+                        {/loop}
+                        </tbody>
+                    </table>
+                {/ifloop}
+                {elseloop rel="sponsor.card.gift"}
+                    <hr>
+                    <div class="alert alert-warning">
+                        <strong>{intl l="Warning" d="theliagiftcard.fo.default"} !</strong> {intl l="You don't have Gift Card yet." d="theliagiftcard.fo.default"}
+                    </div>
+                {/elseloop}
+            {/if}
+        </div>
+    </div>
+</div>

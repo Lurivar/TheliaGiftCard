@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<database defaultIdMethod="native" name="thelia"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="../../../vendor/propel/propel/resources/xsd/database.xsd" >
+    <table name="gift_card" namespace="TheliaGiftCard\Model">
+        <column autoIncrement="true" name="id" primaryKey="true" required="true" type="INTEGER" />
+
+        <column name="sponsor_customer_id" required="false" type="INTEGER" defaultValue="null" />
+        <column name="order_id" required="false" type="INTEGER" defaultValue="null" />
+        <column name="product_id" required="false" type="INTEGER" defaultValue="null"/>
+        <column name="code" required="true" size="100" type="VARCHAR" />
+        <column name="to_name" size="100" type="VARCHAR" />
+        <column name="to_message" size="100" type="VARCHAR" />
+        <column name="amount" scale="6" size="16" type="DECIMAL" />
+        <column name="status"  size="1" type="INTEGER" />
+
+        <column name="expiration_date" type="DATE" required="true"/>
+
+        <foreign-key foreignTable="customer" name="fk_card_gift_sponsor_customer" onDelete="CASCADE" onUpdate="CASCADE">
+            <reference foreign="id" local="sponsor_customer_id" />
+        </foreign-key>
+
+        <foreign-key foreignTable="order" name="fk_gift_card_order" onDelete="CASCADE" onUpdate="CASCADE">
+            <reference foreign="id" local="order_id" />
+        </foreign-key>
+
+        <foreign-key foreignTable="product" name="fk_gift_card_product" onDelete="RESTRICT" onUpdate="RESTRICT">
+            <reference foreign="id" local="product_id" />
+        </foreign-key>
+
+        <behavior name="timestampable" />
+    </table>
+
+    <table name="gift_card_customer" namespace="TheliaGiftCard\Model">
+        <column autoIncrement="true" name="id" primaryKey="true" required="true" type="INTEGER" />
+
+        <column name="customer_id" required="true" type="INTEGER" />
+        <column name="card_id" required="true" size="50" type="INTEGER" />
+        <column name="used_amount" scale="6" size="16" type="DECIMAL" />
+
+        <foreign-key foreignTable="customer" name="fk_card_gift_customer" onDelete="CASCADE" onUpdate="CASCADE">
+            <reference foreign="id" local="customer_id" />
+        </foreign-key>
+
+        <foreign-key foreignTable="gift_card" name="fk_card_gift_id" onDelete="CASCADE" onUpdate="CASCADE">
+            <reference foreign="id" local="card_id" />
+        </foreign-key>
+
+        <behavior name="timestampable" />
+    </table>
+
+    <table name="gift_card_info_cart" namespace="TheliaGiftCard\Model">
+        <column autoIncrement="true" name="id" primaryKey="true" required="true" type="INTEGER" />
+        <column name="order_product_id" type="INTEGER"/>
+        <column name="gift_card_id" type="INTEGER" />
+        <column name="cart_id" type="INTEGER" required="false"/>
+        <column name="cart_item_id" type="INTEGER" required="false"/>
+        <column name="sponsor_name" size="250" type="VARCHAR" />
+        <column name="beneficiary_name" size="250" type="VARCHAR" />
+        <column name="beneficiary_message" size="500" type="VARCHAR" />
+
+        <foreign-key foreignTable="cart" name="fk_gift_card_info_cart" onDelete="CASCADE" onUpdate="CASCADE">
+            <reference foreign="id" local="cart_id" />
+        </foreign-key>
+
+        <foreign-key foreignTable="cart_item" name="fk_gift_card_info_cart_item" onDelete="CASCADE" onUpdate="CASCADE">
+            <reference foreign="id" local="cart_item_id" />
+        </foreign-key>
+    </table>
+
+    <table name="gift_card_cart" namespace="TheliaGiftCard\Model">
+        <column autoIncrement="true" name="id" primaryKey="true" required="true" type="INTEGER" />
+
+        <column name="gift_card_id" type="INTEGER" />
+        <column name="cart_id" required="true" type="INTEGER" />
+        <column name="spend_amount" scale="6" size="16" type="DECIMAL" />
+        <column name="spend_delivery" scale="6" size="16" type="DECIMAL" />
+
+        <foreign-key foreignTable="cart" name="fk_card_gift_cart" onDelete="CASCADE" onUpdate="CASCADE">
+            <reference foreign="id" local="cart_id" />
+        </foreign-key>
+
+        <foreign-key foreignTable="gift_card" name="fk_card_gift_cart_cg" onDelete="CASCADE" onUpdate="CASCADE">
+            <reference foreign="id" local="gift_card_id" />
+        </foreign-key>
+
+        <behavior name="timestampable" />
+    </table>
+
+    <table name="gift_card_order" namespace="TheliaGiftCard\Model">
+        <column autoIncrement="true" name="id" primaryKey="true" required="true" type="INTEGER" />
+
+        <column name="gift_card_id" type="INTEGER" />
+        <column name="order_id" required="true" type="INTEGER" />
+        <column name="spend_amount" scale="6" size="16" type="DECIMAL" />
+        <column name="initial_discount" scale="6" size="16" type="DECIMAL" />
+        <column name="initial_postage" scale="6" size="16" type="DECIMAL" />
+
+        <foreign-key foreignTable="order" name="fk_card_gift_order" onDelete="CASCADE" onUpdate="CASCADE">
+            <reference foreign="id" local="order_id" />
+        </foreign-key>
+
+        <foreign-key foreignTable="gift_card" name="fk_card_gift_order_cg" onDelete="CASCADE" onUpdate="CASCADE">
+            <reference foreign="id" local="gift_card_id" />
+        </foreign-key>
+
+        <behavior name="timestampable" />
+    </table>
+
+    <external-schema filename="local/config/schema.xml" referenceOnly="true" />
+</database>
